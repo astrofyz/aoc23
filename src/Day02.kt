@@ -1,33 +1,5 @@
 fun main() {
 
-    class gameSet(var red: Int, var blue: Int, var green: Int) {
-        init {
-            red = 0
-            blue = 0
-            green = 0
-        }
-    }
-
-//    fun parseBlueprint(input: String): MutableMap<String, MutableMap<String, Int>> {
-//        val ruleMap = mutableMapOf<String, MutableMap<String, Int>>()
-//        for (rule in input.split(":")[1].split(" Each ").subList(1, 5)){
-//            ruleMap[rule.split(" ")[0]] = mutableMapOf<String, Int>()
-//            val elems = rule.split(" ")
-//            for ((index, elem) in elems.withIndex()){
-//                if (elem.toIntOrNull() != null){
-//                    ruleMap[rule.split(" ")[0]]?.set(elems[index+1].replace(".", ""), elem.toInt())
-//                }
-//            }
-//        }
-//        return ruleMap
-//    }
-
-//    fun State.print(){
-//        println("oreRobot: ${this.oreRobot} clayRobot: ${this.clayRobot} obsRobot: ${this.obsidianRobot} geodeRobot: ${this.geodeRobot}")
-//        println("ore: ${this.ore} clay: ${this.clay} obsidian: ${this.obsidian} geode: ${this.geode}; t = ${this.t}")
-//        println("---------------------")
-//    }
-
 
     fun parseGame(input: String): Int {
         var patternGame = mapOf("red" to 12, "green" to 13, "blue" to 14)
