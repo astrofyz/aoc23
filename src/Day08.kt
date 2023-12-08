@@ -29,10 +29,12 @@ fun main() {
         while (i * i < n) {
             if (n % i == 0) {
                 factors.add(i.toLong())
+                factors.add((n / i).toLong())
                 i += 1
             }
             else i+= 1
         }
+        if (factors.isEmpty()) factors.addAll(listOf(1.toLong(), n.toLong()))
         return factors
     }
 
@@ -64,21 +66,19 @@ fun main() {
                 idx += 1
             }
         }
-//        println(sequences)
+
         sequences.forEach{ println("${it.key} ${it.value.size}") }
 
-        var factors = sequences.map{ findFactors(it.value.size) }.flatten()
-
-        sequences.onEachIndexed { index, entry -> println("${entry.key}, ${factors[index]} ${entry.value.size / factors[index]}") }
+        var factors = sequences.map{ findFactors(it.value.size) }.flatten().toSet()
 
         println(factors)
 
-        return factors.reduce{acc, elem -> acc * elem} * 283.toLong()  // I'm ashamed and I'll rewrite it later
+        return factors.reduce{acc, elem -> acc * elem}
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day08_test")
-//    check(part2(testInput) == 0)
+    check(part2(testInput) == 6.toLong())
 
     val input = readInput("Day08")
     // test if implementation meets criteria from the description, like:
