@@ -1,4 +1,6 @@
 import java.util.Queue
+import kotlin.math.abs
+
 fun main() {
 
 //    class Tile(var crd: Pair<Int, Int>, var pipe: Char)
@@ -164,7 +166,7 @@ fun main() {
                     loopTiles[(i+1).mod(loopTiles.size)].first > brd.first -> {flag += 1}
                 }
             }
-            if (flag != 0) inside.add(elem)
+            if (abs(flag) % 2 != 0) inside.add(elem)  // !=0 doesn't work, this one is better, but still doesn't work
         }
 
 //        println(inside)
@@ -180,4 +182,5 @@ fun main() {
 //    part1(input).println()
     part1(input).println()
     part2(input).println()
+//    part2Old(input).println()
 }
