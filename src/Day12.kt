@@ -1,5 +1,6 @@
 import java.util.Queue
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.pow
 fun main() {
 
@@ -22,7 +23,7 @@ fun main() {
                     var newString = rules.mapIndexed { index, c -> if (validIndices.contains(index)) '#' else c }.joinToString(separator = "")
                     var matches = Regex("#+").findAll(newString)
                     if (matches.map { it.value.length }.toList() == pattern) {
-                        println(tmp)
+//                        println(tmp)
 //                        println(newString)
                         ans += 1}
                     return tmp
@@ -46,19 +47,63 @@ fun main() {
     }
 
 
+    // cheated (watched discussion)
     fun part2(input: List<String>): Long {
         var ans = mutableListOf<Long>()
-        for (line in input.take(2)) {
-            ans.add(part1(listOf(line)).toLong())
-            ans.add(part1(listOf("?$line")).toLong())
-            ans.add(part1(listOf("${line.split(' ')[0]}? ${line.split(' ')[1]}")).toLong())
-            ans.add(part1(listOf("${line.split(' ')[0]}?${line.split(' ')[0]} ${line.split(' ')[1]},${line.split(' ')[1]}")).toLong())
+
+        for (line in input) {
+            var rules = IntRange(1,5).map { line.split(' ')[0] }.joinToString  (separator = "?")
+            var pattern = IntRange(1, 5).map { line.split(' ')[1] }.joinToString ( separator = ",").split(",").map { it.toInt() }.toList()
+//            println(rules)
+//            println(pattern)
+
+            // максимальная длина блока, которую можно разместить до данной клетки
+            var maxBlockLen = rules.map { 0 }.toMutableList()
+            maxBlockLen.add(0)
+            for (i in 0 until rules.length) {
+                if (rules.toCharArray()[i] != '.') maxBlockLen[i+1] = maxBlockLen[i] + 1
+            }
+
+//            println(maxBlockLen)
+
+            var counts = IntRange(0, rules.length).map { i -> IntRange(0, pattern.size).map { 0.toLong() }.toMutableList() }.toMutableList()
+
+            counts[0][0] = 1.toLong()
+
+            fun fitBlock(start: Int, length: Int): Boolean {
+                if (start < 0) return false
+                if (start + length > rules.length) return false
+                return (maxBlockLen[start+length] >= length)&&(start == 0 || rules[start - 1] != '#')
+            }
+
+            for (i in 1 .. rules.length) {
+                for (j in 0 .. pattern.size) {
+                    var count = 0.toLong()
+                    if (rules[i - 1] != '#') {
+                        count += counts[i - 1][j]
+                    }
+
+                    if (j > 0) {
+                        var lenBlock = pattern[j - 1]
+//                        println("setting block ${j-1} with length $lenBlock")
+
+                        if (fitBlock(i - lenBlock, lenBlock)) {
+                            var gap = 0
+                            if (i != lenBlock) gap = 1
+//                            println("gap = $gap")
+                            count += counts[i - lenBlock - gap][j - 1]
+                        }
+                    }
+//                    println(count)
+                    counts[i][j] = count
+                }
+            }
+//            println(counts)
+            ans.add(counts.last().last())
+
         }
-        println(ans)
 
-//        println(ans.chunked(3))
-//        println(ans.chunked(3).map { it[0]*maxOf(it[1], it[2])*maxOf(it[1], it[2])*maxOf(it[1], it[2])*maxOf(it[1], it[2]) }.sum())
-
+        println(ans.sum()) //.chunked(5))
         return 0
     }
 
@@ -68,7 +113,7 @@ fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day12_test")
 //    check(part1(testInput) == 0)
-//    part2(testInput)
+    part2(testInput)
 
     val input = readInput("Day12")
     // test if implementation meets criteria from the description, like:
